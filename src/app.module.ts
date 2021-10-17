@@ -1,6 +1,7 @@
+import { AuthInterceptor } from '@interceptors/auth.interceptor';
 import { Module, ValidationPipe } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { APP_PIPE } from '@nestjs/core';
+import { APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Report } from '@reports/reports.entity';
 import { ReportsModule } from '@reports/reports.module';
@@ -26,13 +27,12 @@ import configuration from './config/configuration';
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (config: ConfigService) => {
-        console.log(config.get('DB_NAME'));
         return {
           type: 'postgres',
           host: 'localhost',
           port: 5432,
-          username: 'postgres',
-          password: 'postgres',
+          username: config.get<string>('DB_USER'),
+          password: config.get<string>('DB_PASSWORD'),
           database: config.get<string>('DB_NAME'),
           synchronize: true,
           entities: [User, Report],
@@ -40,12 +40,18 @@ import configuration from './config/configuration';
         };
       },
     }),
-    SessionModule.forRoot({ session: { secret: 'elgrajovuelabajo' } }),
+    SessionModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => ({
+        session: { secret: config.get<string>('SECRET') },
+      }),
+    }),
   ],
   controllers: [AppController],
   providers: [
     AppService,
     { provide: APP_PIPE, useValue: new ValidationPipe({ whitelist: true }) },
+    { provide: APP_INTERCEPTOR, useClass: AuthInterceptor },
   ],
 })
 export class AppModule {}

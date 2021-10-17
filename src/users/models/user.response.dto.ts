@@ -12,5 +12,8 @@ export class UserResponseDto {
   email: string;
 
   @Expose()
+  admin: string;
+
+  @Expose()
   reports: Report[];
 }
