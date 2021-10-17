@@ -14,7 +14,10 @@
       "@users/*": ["src/users/*"],
       "@reports/*": ["src/reports/*"],
       "@decorators/*": ["src/decorators/*"],
-      "@interceptors/*": ["src/interceptors/*"]
+      "@interceptors/*": ["src/interceptors/*"],
+      "@models/*": ["src/models/*"],
+      "@utils/*": ["src/utils/*"],
+      "@guards/*": ["src/guards/*"]
     },
     "incremental": true,
     "skipLibCheck": true,

@@ -1,3 +1,4 @@
+import { Report } from '@reports/reports.entity';
 import { Expose } from 'class-transformer';
 
 export class UserResponseDto {
@@ -9,4 +10,7 @@ export class UserResponseDto {
 
   @Expose()
   email: string;
+
+  @Expose()
+  reports: Report[];
 }
